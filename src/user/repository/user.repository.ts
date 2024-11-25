@@ -8,7 +8,8 @@ import dayjs from 'dayjs';
 export class UserRepository {
   private readonly repository: Repository<User>;
 
-  constructor(private readonly dataSource: DataSource) {
+  constructor(
+    private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(User);
   }
 
@@ -24,7 +25,7 @@ export class UserRepository {
       where: { uuid: userId },
     });
   }
-  async getNewUsers(day: number){
+  async getNewUsers(day: number){ 
       const startDate = dayjs().subtract(day, 'day').startOf('day').toDate();
       const endDate = dayjs().subtract(day, 'day').endOf('day').toDate();
   

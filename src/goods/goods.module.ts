@@ -11,6 +11,7 @@ import { ImageModule } from 'src/image/image.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { AddressModule } from 'src/delivery-address/delivery-address.module';
+import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
 
 @Module({
   imports:[
@@ -18,6 +19,7 @@ import { AddressModule } from 'src/delivery-address/delivery-address.module';
     ImageModule,
     UserModule,
     AddressModule,
+    CustomLoggerModule,
     JwtModule.register({
       secret: 'yourSecretKey',
       signOptions: { expiresIn: '1h' },

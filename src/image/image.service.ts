@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { unlinkSync } from 'fs';
 import { ImageRepository } from './repository/image.repository';
+import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 
 @Injectable()
 export class ImageService {
-  constructor(private readonly imageRepository: ImageRepository) {}
+  constructor(
+    private readonly imageRepository: ImageRepository,
+    private readonly logger: CustomLoggerService,) {}
 
   async saveImages(
     files: Express.Multer.File[],
     type: 'PRODUCT' | 'USER' | 'CATEGORY',
     id: number
   ) {
+    this.logger.log("이미지 생성 서비스 호출")
+
     if (!files || files.length === 0) {
       console.log('No files to save');
       return;
@@ -26,6 +31,7 @@ export class ImageService {
   }
 
   async deleteImage(id: number): Promise<void> {
+    this.logger.log("이미지 삭제 서비스 호출")
     const image = await this.imageRepository.findById(id);
     if (image) {
       try {

@@ -4,6 +4,8 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CustomLoggerService } from './common/custom-logger/logger.service';
+import { LoggingInterceptor } from './common/intersepter/logging.intersepter';
 
 dotenv.config();
 
@@ -23,11 +25,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);  // '/api' 경로에서 Swagger UI를 볼 수 있도록 설정
 
-  if (process.env.NODE_ENV === 'production') {
-    Logger.overrideLogger(['error', 'warn']);
-  } else {
-    Logger.overrideLogger(['log', 'debug', 'error', 'warn', 'verbose']);
-  }
+  app.useLogger(app.get(CustomLoggerService));
+
+  // 전역 인터셉터 등록
+  // app.useGlobalInterceptors(new LoggingInterceptor(app.get(CustomLoggerService)));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

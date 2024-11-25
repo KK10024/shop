@@ -3,10 +3,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 
 @Controller('images')
 export class ImageController {
-  constructor(private readonly imageService: ImageService) {}
+  constructor(
+    private readonly imageService: ImageService, 
+    private readonly logger: CustomLoggerService
+  ) {}
 
   // 여러 이미지 업로드
   @Post('upload')
@@ -30,6 +34,7 @@ export class ImageController {
     id: number  // 이미지 타입
   ) {
     try {
+      this.logger.log("이미지 생성 컨트롤러 호출")
       const savedImages = await this.imageService.saveImages(files, type, id);
       return { message: 'Files uploaded successfully', data: savedImages };
     } catch (error) {
@@ -41,6 +46,7 @@ export class ImageController {
   @Delete(':id')
   async deleteImage(@Param('id') id: number) {
     try {
+      this.logger.log("이미지 삭제 컨트롤러 호출")
       await this.imageService.deleteImage(id);
       return { message: 'Image deleted successfully' };
     } catch (error) {

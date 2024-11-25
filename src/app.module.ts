@@ -15,6 +15,7 @@ import { LoggerMiddleware } from './middleware.ts/logging.middleware';
 import { RolesGuard } from './common/guard/roles.guard';
 import { AdminModule } from './admin/admin.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CustomLoggerModule } from './common/custom-logger/logger.Module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { JwtModule } from '@nestjs/jwt';
     AddressModule,
     ImageModule,
     AdminModule,
+    CustomLoggerModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),     
       serveRoot: '/uploads', //정적파일 경로

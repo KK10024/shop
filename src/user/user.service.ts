@@ -9,6 +9,7 @@ import { EmailUtil } from 'src/utils/email.util';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CreateUser } from './interface/create-Interface';
+import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 
 @Injectable()
 export class UserService {
@@ -17,11 +18,12 @@ export class UserService {
     private cacheManager: Cache,
     private userRepository: UserRepository,
     private jwtService: JwtService,
+    private readonly logger: CustomLoggerService,
   ){}
 
   async emailCode(verifyemailDto: VerifyemailDto) {
     const { email } = verifyemailDto;
-
+    this.logger.log('이메일 코드 서비스 호출');
     const userchk = await this.userRepository.findByEmail(email)
     if(userchk) throw new BadRequestException('이미 가입된 유저 입니다');
 
@@ -39,6 +41,7 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
+    this.logger.log('회원가입 서비스 호출');
     const { email, name, password, code } = createUserDto;
     const savedCode = await this.cacheManager.get(`verification:${email}`);
 
@@ -61,6 +64,7 @@ export class UserService {
     return {messsage: "회원가입완료"};
   }
   async login(loginDTO : LoginUserDto){
+    this.logger.log('로그인 서비스 호출');
     const { email , password} = loginDTO;
     const user = await this.userRepository.findByEmail(email);
 

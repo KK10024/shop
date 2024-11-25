@@ -6,10 +6,14 @@ import { ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody, ApiTags } from 
 import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { AuthenticatedRequest, JwtAuthGuard } from 'src/common/guard/jwt.auth.guard ';
 import { TransformInterceptor } from 'src/common/intersepter/transformation.intersepter';
+import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 @ApiTags('Goods') 
 @Controller('goods')
 export class GoodsController {
-  constructor(private readonly goodsService: GoodsService) {}
+  constructor(
+    private readonly goodsService: GoodsService,    
+    private readonly logger: CustomLoggerService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -21,6 +25,7 @@ export class GoodsController {
     @Body() createGoodDto: CreateGoodDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
+    this.logger.log("상품 생성 컨트롤러 호출")
     return await this.goodsService.create(createGoodDto, files);
   }
 
@@ -31,6 +36,7 @@ export class GoodsController {
   @ApiQuery({ name: 'limit', required: false, type: Number, description: '페이지당 항목 수' })
   @ApiResponse({ status: 200, description: '상품 목록', type: [CreateGoodDto] })
   async findAll(@Query() findGoods: FindGoods) {
+    this.logger.log("모든 상품 조회 컨트롤러 호출")
     return await this.goodsService.findAll(findGoods);
   }
   @Post('/orders')
@@ -44,6 +50,7 @@ export class GoodsController {
     @Body() createOrderDto: CreateGoodsOrderDto,
     @Req() req: AuthenticatedRequest,
   ) {  
+    this.logger.log("상품 오더 생성 컨트롤러 호출")
     createOrderDto.userId = req.user?.uuid;
     return await this.goodsService.createOrder(createOrderDto);
   }
@@ -55,6 +62,7 @@ export class GoodsController {
   async findAllOrders(
     @Req() req: AuthenticatedRequest,
   ) {
+    this.logger.log("모든 상품 오더 조회 컨트롤러 호출")
     const userId = req.user?.uuid;
     return await this.goodsService.findAllOrders(userId);
   }
@@ -65,6 +73,7 @@ export class GoodsController {
   @ApiResponse({ status: 200, description: '상품 정보', type: CreateGoodDto })
   @ApiResponse({ status: 404, description: '상품을 찾을 수 없습니다.' })
   async findOne(@Param('id') id: string) {
+    this.logger.log("상품 오더 상세조회 컨트롤러 호출")
     return await this.goodsService.findOne(+id);
   }
 
@@ -75,6 +84,7 @@ export class GoodsController {
   @ApiResponse({ status: 200, description: '상품이 삭제되었습니다.' })
   @ApiResponse({ status: 404, description: '상품을 찾을 수 없습니다.' })
   async delete(@Param('id') id: string) {
+    this.logger.log("상품 오더 삭제 컨트롤러 호출")
     return await this.goodsService.delete(+id);
   }
 }

@@ -7,11 +7,13 @@ import { DeliveryAddressService } from './delivery-address.service';
 import { DeliveryAddressRepository } from './repository/delivery-address.repository';
 import { DataSource } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([DeliveryAddress]), 
     UserModule,
+    CustomLoggerModule,
     JwtModule.register({
       secret: 'yourSecretKey',
       signOptions: { expiresIn: '1h' },

@@ -4,11 +4,13 @@ import { ImageRepository } from "./repository/image.repository";
 import { DataSource } from "typeorm";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Image } from "./entities/image.entity";
+import { CustomLoggerModule } from "src/common/custom-logger/logger.Module";
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Image])
+        TypeOrmModule.forFeature([Image]),
+        CustomLoggerModule,
     ],
     providers: [
         ImageService,

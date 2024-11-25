@@ -8,12 +8,14 @@ import { AdminRepository } from './repository/admin.repository';
 import { AdminController } from './admin.controller';
 import { GoodsModule } from 'src/goods/goods.module';
 import { UserModule } from 'src/user/user.module';
+import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Menu]),
     UserModule,
     GoodsModule,
+    CustomLoggerModule,
   ],
   controllers: [AdminController],
   providers: [

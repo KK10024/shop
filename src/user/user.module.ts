@@ -7,10 +7,12 @@ import { UserRepository } from './repository/user.repository';
 import { DataSource } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
+    CustomLoggerModule,
     CacheModule.register({
       store: 'memory',
       ttl: 300000,

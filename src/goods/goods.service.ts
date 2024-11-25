@@ -7,6 +7,7 @@ import { ImageService } from 'src/image/image.service';
 import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { UserRepository } from 'src/user/repository/user.repository';
 import { DeliveryAddressRepository } from 'src/delivery-address/repository/delivery-address.repository';
+import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 
 @Injectable()
 export class GoodsService {
@@ -16,11 +17,12 @@ export class GoodsService {
     private userRepository: UserRepository,
     private imageService: ImageService,
     private deliveryAddressRepository: DeliveryAddressRepository,
-
+    private logger: CustomLoggerService,
   ) {}
 
   // 상품 생성 비즈니스 로직
   async create(createGoodDto: CreateGoodDto, files: Express.Multer.File[]) {
+    this.logger.log("상품 생성 서비스 호출")
     // 상품 데이터 저장 로직
     const savedGood = await this.goodsRepository.create(createGoodDto);
 
@@ -33,11 +35,14 @@ export class GoodsService {
   }
   // 상품 목록 조회
   async findAll(findGoods?: FindGoods) {
+    this.logger.log("모든 상품 조회 서비스 호출")
     return await this.goodsRepository.findAll(findGoods.page, findGoods.limit);
   }
 
   // 상품 상세 조회
   async findOne(id: number) {
+    this.logger.log("상품 상세 조회 서비스 호출")
+
     const goods = await this.goodsRepository.findOne(id);
     if (!goods) throw new NotFoundException('상품을 찾을 수 없습니다.');
     goods.views += 1;
@@ -46,12 +51,16 @@ export class GoodsService {
   }
 
   async delete(id: number) {
+    this.logger.log("상품 삭제 서비스 호출")
+
     const goods = await this.goodsRepository.findOne(id);
     if (!goods) throw new NotFoundException('삭제할 상품이 없습니다.');
     
     await this.goodsRepository.delete(id);
   }
   async createOrder(createGoodsOrderDto: CreateGoodsOrderDto) {
+    this.logger.log("상품 오더 생성 서비스 호출")
+
     const user = await this.userRepository.findOne(createGoodsOrderDto.userId);
     const address = await this.deliveryAddressRepository.findAddressById(createGoodsOrderDto.addressId);
   
@@ -90,10 +99,14 @@ export class GoodsService {
     };
   }
   async findAllOrders(userId: string){
+    this.logger.log("모든 상품 오더 조회 서비스 호출")
+
     return await this.goodsOrderRepository.findAllOrders(userId);
   }
   //주문 상세 조회
   async getOrderById(id: number) {
+    this.logger.log(" 상품 오더 상세조회 서비스 호출")
+
     return await this.goodsOrderRepository.findById(id);
   }
 }
