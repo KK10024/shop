@@ -7,6 +7,7 @@ import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { AuthenticatedRequest, JwtAuthGuard } from 'src/common/guard/jwt.auth.guard ';
 import { TransformInterceptor } from 'src/common/intersepter/transformation.intersepter';
 import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
+
 @ApiTags('Goods') 
 @Controller('goods')
 export class GoodsController {

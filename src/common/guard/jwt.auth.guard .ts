@@ -29,6 +29,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = user;  // 인증된 사용자 정보 설정
       return true;
     } catch (error) {
+      this.logger.log(error)
       return false;
     }
   }

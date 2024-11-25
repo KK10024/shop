@@ -32,7 +32,7 @@ import { CustomLoggerModule } from './common/custom-logger/logger.Module';
       serveRoot: '/uploads', //정적파일 경로
     }),
     JwtModule.register({
-      secret: 'yourSecretKey',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],

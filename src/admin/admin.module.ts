@@ -15,16 +15,16 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
     TypeOrmModule.forFeature([Menu]),
     UserModule,
     GoodsModule,
-    CustomLoggerModule,
+    CustomLoggerModule ,    
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
   ],
   controllers: [AdminController],
   providers: [
     AdminService,
-    {
-      provide: AdminRepository,
-      useFactory: (dataSource: DataSource) => new AdminRepository(dataSource),
-      inject: [DataSource],
-    },
+    AdminRepository
   ],
   exports: [AdminRepository], 
 })

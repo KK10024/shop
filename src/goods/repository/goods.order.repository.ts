@@ -31,10 +31,12 @@ export class GoodsOrderRepository {
         'goods.name AS goods_name',
         'goods.price AS goods_price',
         'user.name AS user_name',
+        'address.address AS address',
         'goodsOrder.quantity * goods.price AS total_price',
       ])
       .leftJoin('goodsOrder.goods', 'goods')
       .leftJoin('goodsOrder.user', 'user') 
+      .leftJoin('goodsOrder.deliveryAddress', 'address')
       .where('user.uuid = :userId', { userId }) 
       .getRawMany(); 
   }
@@ -55,7 +57,7 @@ export class GoodsOrderRepository {
         .createQueryBuilder("order")
         .where("order.createdAt >= :start", { start: todayStart })
         .andWhere("order.createdAt <= :end", { end: todayEnd })
-        .getCount();
+        .getMany();
 
     return countOrder;
   }

@@ -18,18 +18,14 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
       ttl: 300000,
     }),  
     JwtModule.register({
-      secret: 'yourSecretKey',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [UserController],
   providers: [
     UserService,
-    {
-      provide: UserRepository,
-      useFactory: (dataSource: DataSource) => new UserRepository(dataSource),
-      inject: [DataSource],
-    },
+    UserRepository
   ],
   exports: [UserRepository], 
 })

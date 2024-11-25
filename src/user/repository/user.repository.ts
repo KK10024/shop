@@ -33,7 +33,7 @@ export class UserRepository {
           .createQueryBuilder('user')
           .where('user.createdAt >= :start', { start: startDate })
           .andWhere('user.createdAt <= :end', { end: endDate })
-          .getCount();
+          .getMany();
   
       return user;
   }

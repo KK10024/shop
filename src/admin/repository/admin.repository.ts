@@ -1,18 +1,21 @@
 import { DataSource, Repository } from "typeorm";
+import { CreateMenuDto } from "../dto/create-menu.dto";
 import { Menu } from "../entities/menu.entity";
+import { Injectable } from "@nestjs/common";
 
-
-export class AdminRepository {
+@Injectable()
+export class AdminRepository{
     private readonly repository: Repository<Menu>;
 
-    constructor(private readonly dataSource: DataSource) {
-      this.repository = this.dataSource.getRepository(Menu);
+    constructor(
+        private readonly dataSource: DataSource) {
+        this.repository = this.dataSource.getRepository(Menu);
     }
-    async createMeun(menu){
-        const saveMenu = await this.repository.create(menu);
-        return await this.repository.save(saveMenu);
+    async createMenu(menu: CreateMenuDto) {
+        return await this.repository.save(menu);
     }
-    async findMeun(){
+
+    async findMenu() {
         return await this.repository.find();
     }
 }

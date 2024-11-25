@@ -21,23 +21,16 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
     AddressModule,
     CustomLoggerModule,
     JwtModule.register({
-      secret: 'yourSecretKey',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [GoodsController],
   providers: [
     GoodsService, 
-    {
-      provide: GoodsRepository,
-      useFactory: (dataSource: DataSource) => new GoodsRepository(dataSource),
-      inject: [DataSource],
-    },
-    {
-      provide: GoodsOrderRepository,
-      useFactory: (dataSource: DataSource) => new GoodsOrderRepository(dataSource),
-      inject: [DataSource],
-    },
+    GoodsRepository, 
+    GoodsOrderRepository
   ],
+  exports: [GoodsRepository, GoodsOrderRepository]
 })
 export class GoodsModule {}

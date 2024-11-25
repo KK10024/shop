@@ -4,8 +4,10 @@ import { AdminRepository } from "./repository/admin.repository";
 import { GoodsOrderRepository } from "src/goods/repository/goods.order.repository";
 import { GoodsRepository } from "src/goods/repository/goods.repository";
 import { CustomLoggerService } from "src/common/custom-logger/logger.service";
+import { Injectable } from "@nestjs/common";
 
 
+@Injectable()
 export class AdminService {
     constructor(
         private adminRepository: AdminRepository,
@@ -13,14 +15,15 @@ export class AdminService {
         private goodsOrderRepository: GoodsOrderRepository,
         private goodsRepository: GoodsRepository,
         private logger: CustomLoggerService,
-        ){}
+
+    ){}
     async createMenu(createMenuDto: CreateMenuDto){
-        this.logger.log("관리자 메뉴 생성 서비스 호출")
-        return await this.adminRepository.createMeun(createMenuDto);
+         this.logger.log("관리자 메뉴 생성 서비스 호출")
+        return await this.adminRepository.createMenu(createMenuDto);
     }
     async findMeun(){
         this.logger.log("관리자 메뉴 조회 서비스 호출")
-        return await this.adminRepository.findMeun();
+        return await this.adminRepository.findMenu();
     }
     async getNewUsers(day: number){
         this.logger.log("관리자 새로운 유저 조회 서비스 호출")
