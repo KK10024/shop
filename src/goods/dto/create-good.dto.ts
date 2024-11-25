@@ -1,34 +1,19 @@
-import { IsString, IsOptional, IsArray, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { GoodsSize } from 'src/common/enum/goods';
 
 export class CreateGoodDto {
   @IsString()
-  @ApiProperty({
-    description: '상품 이름',
-    example: '상품이름',
-  })
+  @IsNotEmpty()
   name: string;
 
   @IsString()
-  @ApiProperty({
-    description: '상품 설명',
-    example: '그냥저냥 바지입니다',
-  })
+  @IsNotEmpty()
   content: string;
 
-  @IsString()
-  @ApiProperty({
-    description: '상품 가격',
-    example: '1000',
-  })
+  @IsNumber()
+  @IsNotEmpty()
   price: number;
-
-  @IsString()
-  @ApiProperty({
-    description: '상품의 크기',
-    example: 'L',
-  })
-  size: string;
 
   @IsArray()
   @IsOptional()
@@ -40,11 +25,9 @@ export class CreateGoodDto {
     required: false,
   })
   files?: string[];
-  
-  @IsString()
-  @ApiProperty({
-    description: '상품 종류',
-    example: 'PRODUCT',
-  })
-  type: string;
+
+  @IsEnum(GoodsSize)
+  @IsOptional()
+  size?: GoodsSize; // 선택적으로 받을 수 있도록
 }
+

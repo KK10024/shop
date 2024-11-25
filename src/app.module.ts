@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -9,6 +9,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ImageModule } from './image/image.module';
 import { AddressModule } from './delivery-address/delivery-address.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './common/intersepter/logging.intersepter';
+import { LoggerMiddleware } from './middleware.ts/logging.middleware'; 
 
 @Module({
   imports: [
@@ -24,6 +27,15 @@ import { AddressModule } from './delivery-address/delivery-address.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule { 
+  configure(consumer: MiddlewareConsumer) {
+  consumer.apply(LoggerMiddleware).forRoutes('*'); // 모든 라우트에 적용
+}}

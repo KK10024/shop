@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, UploadedFiles, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, UploadedFiles, UseGuards, Req, UseInterceptors } from '@nestjs/common';
 import { GoodsService } from './goods.service';
 import { CreateGoodDto } from './dto/create-good.dto';
 import { FindGoods } from './dto/find-good.dto';
 import { ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateGoodsOrderDto } from './dto/create-order.dto';
-import { AuthenticatedRequest, JwtAuthGuard } from 'src/user/guard/jwt.auth.guard ';
-
+import { AuthenticatedRequest, JwtAuthGuard } from 'src/common/guard/jwt.auth.guard ';
+import { TransformInterceptor } from 'src/common/intersepter/transformation.intersepter';
 @ApiTags('Goods') 
 @Controller('goods')
 export class GoodsController {
@@ -24,15 +24,17 @@ export class GoodsController {
   }
 
   @Get()
+  @UseInterceptors(TransformInterceptor)
   @ApiOperation({ summary: '모든 상품을 조회합니다.' })
   @ApiQuery({ name: 'page', required: false, type: Number, description: '페이지 번호' })
   @ApiQuery({ name: 'limit', required: false, type: Number, description: '페이지당 항목 수' })
   @ApiResponse({ status: 200, description: '상품 목록', type: [CreateGoodDto] })
   async findAll(@Query() findGoods: FindGoods) {
-    return this.goodsService.findAll(findGoods);
+    return await this.goodsService.findAll(findGoods);
   }
   @Post('/orders')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransformInterceptor)
   @ApiOperation({ summary: '상품 주문을 생성합니다.' })
   @ApiBody({ type: CreateGoodsOrderDto })
   @ApiResponse({ status: 201, description: '주문이 성공적으로 생성되었습니다.' })
@@ -47,6 +49,7 @@ export class GoodsController {
 
   @Get('/orders')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransformInterceptor)
   @ApiOperation({ summary: '사용자의 모든 주문을 조회합니다.' })
   async findAllOrders(
     @Req() req: AuthenticatedRequest,
@@ -71,5 +74,4 @@ export class GoodsController {
   async delete(@Param('id') id: string) {
     return await this.goodsService.delete(+id);
   }
-
 }

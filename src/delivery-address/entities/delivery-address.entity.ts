@@ -18,7 +18,7 @@ export class DeliveryAddress {
     address: string; 
 
     @Column({ default: false })
-    isDefault: boolean; 
+    isDefault: boolean;
 
     @ManyToOne(() => User, (user) => user.address, { onDelete: "CASCADE" })
     user: User;

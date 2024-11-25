@@ -8,28 +8,20 @@ export class CreateGoodsOrderDto {
     example: 'pending',
   })
   status: string;
-
   @IsNumber()
-  @Min(1)
   @ApiProperty({
-    description: '상품수량',
-    example: '1',
+    description: '주소 ID',
   })
-  quantity:number;
-
-  @ApiProperty({
-    description: '주문한 상품 ID',
-  })
-  goodsId: number;
-
   @ApiProperty({
     description: 'userId',
   })
   userId: string;
-
   @ApiProperty({
     description: '배송지 ID',
   })
-  deliveryAddressId: number;
-
+  addressId: number;
+  items: {
+    goodsId: number;
+    quantity: number;
+  }[];
 }

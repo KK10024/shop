@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { CreateUser } from '../interface/create-Interface';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class UserRepository {
@@ -22,5 +23,17 @@ export class UserRepository {
     return await this.repository.findOne({
       where: { uuid: userId },
     });
+  }
+  async getNewUsers(day: number){
+      const startDate = dayjs().subtract(day, 'day').startOf('day').toDate();
+      const endDate = dayjs().subtract(day, 'day').endOf('day').toDate();
+  
+      const user = await this.repository
+          .createQueryBuilder('user')
+          .where('user.createdAt >= :start', { start: startDate })
+          .andWhere('user.createdAt <= :end', { end: endDate })
+          .getCount();
+  
+      return user;
   }
 }

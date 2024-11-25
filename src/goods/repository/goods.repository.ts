@@ -12,7 +12,7 @@ export class GoodsRepository {
   }
 
   // 상품 생성
-  async create(goods: CreateGoodDto): Promise<Goods> {
+  async create(goods: CreateGoodDto){
     return await this.repository.save(goods);
   }
 
@@ -40,11 +40,5 @@ export class GoodsRepository {
   // 상품 삭제
   async delete(id: number): Promise<void> {
     await this.repository.delete(id);
-  }
-
-  //트랜잭션 매니저
-  async createWithTransaction(goods: CreateGoodDto, manager: EntityManager,
-  ): Promise<Goods> {
-    return await manager.save(Goods, goods);
   }
 }

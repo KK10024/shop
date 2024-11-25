@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } fro
 import { DeliveryAddressService } from "./delivery-address.service";
 import { CreateDeliveryAddressDto } from "./dto/create-delivery-address";
 import { UpdateDeliveryAddressDto } from "./dto/update-delivery-address.dto";
-import { AuthenticatedRequest, JwtAuthGuard } from "src/user/guard/jwt.auth.guard ";
+import { AuthenticatedRequest, JwtAuthGuard } from "src/common/guard/jwt.auth.guard ";
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeliveryAddress } from './entities/delivery-address.entity';
 

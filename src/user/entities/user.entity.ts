@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { GoodsOrder } from "src/goods/entities/goods.order.entity";
 import { DeliveryAddress } from "src/delivery-address/entities/delivery-address.entity";
+import { UserGender, UserRole } from "src/common/enum/user";
 
 @Entity()
 export class User {
@@ -16,9 +17,20 @@ export class User {
     @Column()
     password: string;
     
-    @Column()
-    gender: string;
+    @Column({
+        type: 'enum',
+        enum: UserGender,
+        default: UserGender.MALE,
+    })
+    gender: UserGender;
 
+    @Column({
+        type: 'enum',
+        enum: UserRole,
+        default: UserRole.USER,
+      })
+    role: UserRole;
+    
     @CreateDateColumn()
     createdAt: Date;
   

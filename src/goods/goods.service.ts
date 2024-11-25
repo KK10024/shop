@@ -16,8 +16,8 @@ export class GoodsService {
     private goodsRepository: GoodsRepository,
     private goodsOrderRepository: GoodsOrderRepository,
     private userRepository: UserRepository,
-    private readonly imageService: ImageService,
-    private readonly deliveryAddressRepository: DeliveryAddressRepository,
+    private imageService: ImageService,
+    private deliveryAddressRepository: DeliveryAddressRepository,
 
   ) {}
 
@@ -53,29 +53,48 @@ export class GoodsService {
     await this.goodsRepository.delete(id);
   }
   async createOrder(createGoodsOrderDto: CreateGoodsOrderDto) {
-    const goods = await this.goodsRepository.findOne(createGoodsOrderDto.goodsId);
     const user = await this.userRepository.findOne(createGoodsOrderDto.userId);
-    const deliveryAddress = await this.deliveryAddressRepository.findUserAddresses(createGoodsOrderDto.userId);
-    
-    if (!deliveryAddress) {
+    const address = await this.deliveryAddressRepository.findAddressById(createGoodsOrderDto.addressId);
+  
+    if (!user) {
+      throw new NotFoundException('사용자가 존재하지 않습니다.');
+    }
+    if (!address) {
       throw new NotFoundException('배송지를 찾을 수 없습니다.');
     }
-    if (!goods || !user) {
-      throw new NotFoundException('상품 또는 사용자가 존재하지 않습니다.');
+  
+    // 모든 상품 검증 및 주문 생성
+    const orderItems = [];
+    for (const item of createGoodsOrderDto.items) {
+      const goods = await this.goodsRepository.findOne(item.goodsId);
+  
+      if (!goods) {
+        throw new NotFoundException(`상품 ID ${item.goodsId}에 해당하는 상품을 찾을 수 없습니다.`);
+      }
+  
+      const orderItemData = {
+        goods,
+        quantity: item.quantity,
+        user,
+        address,
+        status: createGoodsOrderDto.status,
+      };
+  
+      // 각 상품별 주문 데이터 생성
+      const orderItem = await this.goodsOrderRepository.createOrder(orderItemData);
+      orderItems.push(orderItem);
     }
-    const goodsOrderData: CreateGoodsInterface = {
-      status: createGoodsOrderDto.status,
-      quantity: createGoodsOrderDto.quantity,
-      goods,
-      user
+  
+    return {
+      message: '주문이 성공적으로 생성되었습니다.',
+      orderItems,
     };
-    return this.goodsOrderRepository.createOrder(goodsOrderData);
   }
   async findAllOrders(userId: string){
-    return this.goodsOrderRepository.findAllOrders(userId);
+    return await this.goodsOrderRepository.findAllOrders(userId);
   }
-  // 특정 주문 조회
-  // async getOrderById(id: number): Promise<GoodsOrder | null> {
-  //   return this.goodsOrderRepository.findById(id); // findById 메서드를 호출하여 주문 조회
-  // }
+  //주문 상세 조회
+  async getOrderById(id: number) {
+    return await this.goodsOrderRepository.findById(id);
+  }
 }

@@ -69,7 +69,7 @@ export class UserService {
     const pwchk = await bcrypt.compare(password, user.password);
     if(!pwchk) throw new BadRequestException("패스워드가 일치하지않음");
 
-    const payload = { email: user.email, uuid: user.uuid };
+    const payload = { email: user.email, uuid: user.uuid , role: user.role };
     const token = this.jwtService.sign(payload);
     return token;
   }

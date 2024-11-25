@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -23,6 +23,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);  // '/api' 경로에서 Swagger UI를 볼 수 있도록 설정
 
+  if (process.env.NODE_ENV === 'production') {
+    Logger.overrideLogger(['error', 'warn']);
+  } else {
+    Logger.overrideLogger(['log', 'debug', 'error', 'warn', 'verbose']);
+  }
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

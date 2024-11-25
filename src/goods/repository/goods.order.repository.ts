@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { GoodsOrder } from '../entities/goods.order.entity'; // GoodsOrder 엔티티 경로 수정 필요
 import { CreateGoodsInterface } from '../interface/create-order.interface';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class GoodsOrderRepository {
@@ -10,16 +11,13 @@ export class GoodsOrderRepository {
   constructor(private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(GoodsOrder);
   }
-
-  async createOrder(goodsOrderData: CreateGoodsInterface) {  
-
-    const goodsOrder = this.repository.create({
-      status: goodsOrderData.status,
-      quantity: goodsOrderData.quantity,
-      goods: goodsOrderData.goods,
-      user: goodsOrderData.user,
-    }); 
-    return await this.repository.save(goodsOrder); 
+  async createOrder(orderData: CreateGoodsInterface) {
+    const order = this.repository.create(orderData);
+    return await this.repository.save(order);
+  }
+  async createOrders(orderDataArray: CreateGoodsInterface[]) {
+    const orders = this.repository.create(orderDataArray);
+    return await this.repository.save(orders);
   }
   async findAllOrders(userId: string): Promise<GoodsOrder[]> {
     return this.repository
@@ -48,5 +46,32 @@ export class GoodsOrderRepository {
       .where('goodsOrder.id = :id', { id });
 
     return await queryBuilder.getOne();
+  }
+  async todayOrder(){
+    const todayStart = dayjs().startOf('day').toDate(); 
+    const todayEnd = dayjs().endOf('day').toDate(); 
+
+    const countOrder = await this.repository
+        .createQueryBuilder("order")
+        .where("order.createdAt >= :start", { start: todayStart })
+        .andWhere("order.createdAt <= :end", { end: todayEnd })
+        .getCount();
+
+    return countOrder;
+  }
+  async todayTotalPrice() {
+    const startOfToday = dayjs().startOf('day').toDate();
+    const endOfToday = dayjs().endOf('day').toDate();
+
+    const todayRevenue = await this.repository
+        .createQueryBuilder('goodsOrder')
+        .leftJoin('goodsOrder.goods', 'goods')
+        .select('SUM(goodsOrder.quantity * goods.price)', 'totalRevenue')
+        .where('goodsOrder.createdAt >= :start', { start: startOfToday })
+        .andWhere('goodsOrder.createdAt <= :end', { end: endOfToday })
+        .andWhere('goodsOrder.deletedAt IS NULL')
+        .getRawOne();
+
+    return Number(todayRevenue.totalRevenue || 0);
   }
 }

@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { GoodsOrder } from "./goods.order.entity";
 import { Image } from "src/image/entities/image.entity";
+import { GoodsSize } from "src/common/enum/goods";
 
 @Entity()
 export class Goods {
@@ -16,6 +17,13 @@ export class Goods {
     @Column()
     price: number;
 
+    @Column({
+        type: 'enum',
+        enum: GoodsSize,
+        default: GoodsSize.MEDIUM
+    })
+    size: GoodsSize;
+
     @CreateDateColumn()
     createdAt: Date;
   
@@ -24,9 +32,6 @@ export class Goods {
   
     @DeleteDateColumn({ nullable: true })
     deletedAt: Date | null; 
-
-    @Column()
-    size: string;
 
     @OneToMany(() => Image, (image) => image.goods)  // 상품과 관련된 이미지들
     images: Image[];

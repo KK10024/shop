@@ -32,5 +32,6 @@ export class GoodsOrder {
     user: User;
     
     @ManyToOne(() => DeliveryAddress, (deliveryAddress) => deliveryAddress.orders)
+    @JoinColumn({ name: 'addressId' })
     deliveryAddress: DeliveryAddress;
 }
