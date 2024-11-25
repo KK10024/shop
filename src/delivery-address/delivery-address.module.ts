@@ -16,7 +16,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'yourSecretKey',
       signOptions: { expiresIn: '1h' },
     }),
-  ], // User 모듈 의존성 추가
+  ],
   controllers: [DeliveryAddressController],
   providers: [
     DeliveryAddressService,

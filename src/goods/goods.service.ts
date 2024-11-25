@@ -3,11 +3,9 @@ import { GoodsRepository } from './repository/goods.repository';
 import { CreateGoodDto } from './dto/create-good.dto';
 import { GoodsOrderRepository } from './repository/goods.order.repository';
 import { FindGoods } from './dto/find-good.dto';
-import { GoodsOrder } from './entities/goods.order.entity';
 import { ImageService } from 'src/image/image.service';
 import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { UserRepository } from 'src/user/repository/user.repository';
-import { CreateGoodsInterface } from './interface/create-order.interface';
 import { DeliveryAddressRepository } from 'src/delivery-address/repository/delivery-address.repository';
 
 @Injectable()
@@ -42,7 +40,8 @@ export class GoodsService {
   async findOne(id: number) {
     const goods = await this.goodsRepository.findOne(id);
     if (!goods) throw new NotFoundException('상품을 찾을 수 없습니다.');
-    
+    goods.views += 1;
+    this.goodsRepository.save(goods);
     return goods;
   }
 

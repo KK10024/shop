@@ -9,9 +9,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ImageModule } from './image/image.module';
 import { AddressModule } from './delivery-address/delivery-address.module';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/intersepter/logging.intersepter';
 import { LoggerMiddleware } from './middleware.ts/logging.middleware'; 
+import { RolesGuard } from './common/guard/roles.guard';
+import { AdminModule } from './admin/admin.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -21,9 +24,14 @@ import { LoggerMiddleware } from './middleware.ts/logging.middleware';
     ImageModule,
     AddressModule,
     ImageModule,
+    AdminModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),     
       serveRoot: '/uploads', //정적파일 경로
+    }),
+    JwtModule.register({
+      secret: 'yourSecretKey',
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AppController],
@@ -33,9 +41,13 @@ import { LoggerMiddleware } from './middleware.ts/logging.middleware';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule { 
   configure(consumer: MiddlewareConsumer) {
-  consumer.apply(LoggerMiddleware).forRoutes('*'); // 모든 라우트에 적용
+  consumer.apply(LoggerMiddleware).forRoutes('*');
 }}

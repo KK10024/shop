@@ -12,6 +12,7 @@ export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '새 상품을 생성합니다.' })
   @ApiBody({ type: CreateGoodDto })
   @ApiResponse({ status: 201, description: '상품이 성공적으로 생성되었습니다.' })
@@ -58,6 +59,7 @@ export class GoodsController {
     return await this.goodsService.findAllOrders(userId);
   }
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'ID로 상품을 조회합니다.' })
   @ApiParam({ name: 'id', type: String, description: '조회할 상품의 ID' })
   @ApiResponse({ status: 200, description: '상품 정보', type: CreateGoodDto })
@@ -67,6 +69,7 @@ export class GoodsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'ID로 상품을 삭제합니다.' })
   @ApiParam({ name: 'id', type: String, description: '삭제할 상품의 ID' })
   @ApiResponse({ status: 200, description: '상품이 삭제되었습니다.' })

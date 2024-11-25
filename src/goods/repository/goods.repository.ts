@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, EntityManager, QueryBuilder, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Goods } from '../entities/goods.entity';
 import { CreateGoodDto } from '../dto/create-good.dto';
 
@@ -15,7 +15,9 @@ export class GoodsRepository {
   async create(goods: CreateGoodDto){
     return await this.repository.save(goods);
   }
-
+  async save(data){
+    return await this.repository.save(data);
+  }
   async findAll(page: number, limit: number): Promise<{ data: Goods[], totalPages: number }> {
     const skip = (page - 1) * limit;
     const [data, totalCount]: [Goods[], number] = await this.repository
@@ -40,5 +42,15 @@ export class GoodsRepository {
   // 상품 삭제
   async delete(id: number): Promise<void> {
     await this.repository.delete(id);
+  }
+  async getTopViewGoods(limit: number = 10) {
+    const goods = await this.repository
+    .createQueryBuilder("goods")
+    .select(["goods.id", "goods.name", "goods.views"])
+    .orderBy("goods.views", "DESC")
+    .limit(limit)
+    .getMany();
+
+    return goods;
   }
 }

@@ -37,7 +37,6 @@ export class DeliveryAddressService {
         if (!address) throw new NotFoundException("주소가 존재하지않습니다.");
 
         if (dto.isDefault) {
-            // 기존 기본 배송지 초기화
             await this.addressRepository.resetDefaultAddresses(address.user.uuid);
         }
 
@@ -45,8 +44,9 @@ export class DeliveryAddressService {
         return this.addressRepository.save(address);
     }
 
-    async deleteAddress(id: string): Promise<void> {
+    async deleteAddress(id: number) {
         const result = await this.addressRepository.delete(id);
-        if (!result.affected) throw new NotFoundException("Address not found");
+        if (!result.affected) throw new NotFoundException("배송지를 찾을 수 없습니다.");
+        return ({message: "삭제되었습니다"});
     }
 }

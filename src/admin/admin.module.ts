@@ -6,18 +6,14 @@ import { Menu } from './entities/menu.entity';
 import { AdminService } from './admin.service';
 import { AdminRepository } from './repository/admin.repository';
 import { AdminController } from './admin.controller';
-import { UserRepository } from 'src/user/repository/user.repository';
-import { GoodsOrderRepository } from 'src/goods/repository/goods.order.repository';
+import { GoodsModule } from 'src/goods/goods.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Menu]),
-    UserRepository,
-    GoodsOrderRepository,
-    JwtModule.register({
-      secret: 'yourSecretKey',
-      signOptions: { expiresIn: '1h' },
-    }),
+    UserModule,
+    GoodsModule,
   ],
   controllers: [AdminController],
   providers: [
@@ -30,4 +26,4 @@ import { GoodsOrderRepository } from 'src/goods/repository/goods.order.repositor
   ],
   exports: [AdminRepository], 
 })
-export class UserModule {}
+export class AdminModule {}

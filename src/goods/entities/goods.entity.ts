@@ -24,6 +24,9 @@ export class Goods {
     })
     size: GoodsSize;
 
+    @Column({ default: 0 })
+    views: number;
+
     @CreateDateColumn()
     createdAt: Date;
   

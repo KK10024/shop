@@ -18,7 +18,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
 
     this.logger.log(
-      `Incoming Request - Method: ${method}, URL: ${url}, Query: ${JSON.stringify(
+      `Request - Method: ${method}, URL: ${url}, Query: ${JSON.stringify(
         query,
       )}, Params: ${JSON.stringify(params)}, Body: ${JSON.stringify(body)}`,
     );
@@ -26,7 +26,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap((response) => {
         this.logger.log(
-          `Outgoing Response - Method: ${method}, URL: ${url}, Status: ${
+          `Response - Method: ${method}, URL: ${url}, Status: ${
             context.switchToHttp().getResponse().statusCode
           }, Response: ${JSON.stringify(response)}, Time: ${
             Date.now() - now

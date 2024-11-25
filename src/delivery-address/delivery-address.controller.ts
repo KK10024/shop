@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { DeliveryAddressService } from "./delivery-address.service";
 import { CreateDeliveryAddressDto } from "./dto/create-delivery-address";
 import { UpdateDeliveryAddressDto } from "./dto/update-delivery-address.dto";
 import { AuthenticatedRequest, JwtAuthGuard } from "src/common/guard/jwt.auth.guard ";
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeliveryAddress } from './entities/delivery-address.entity';
+import { TransformInterceptor } from "src/common/intersepter/transformation.intersepter";
 
 @ApiTags('Delivery Address')  // 컨트롤러 태그
 @Controller("delivery-address")
@@ -13,6 +14,7 @@ export class DeliveryAddressController {
 
     @Post()
     @UseGuards(JwtAuthGuard)
+    @UseInterceptors(TransformInterceptor)
     @ApiOperation({ summary: '새 배송 주소 추가' })  // API 설명
     @ApiResponse({ status: 201, description: '배송 주소가 추가되었습니다.' })
     @ApiResponse({ status: 400, description: '잘못된 요청입니다.' })
@@ -21,11 +23,13 @@ export class DeliveryAddressController {
         @Req() req: AuthenticatedRequest
     ) {
         dto.userId = req.user?.uuid;
+        console.log(req.user?.uuid, "userID");
         return this.addressService.addAddress(dto);
     }
 
-    @Get(":userId")
+    @Get()
     @UseGuards(JwtAuthGuard)
+    @UseInterceptors(TransformInterceptor)
     @ApiOperation({ summary: '사용자의 모든 배송 주소 조회' })
     @ApiResponse({ status: 200, description: '사용자의 배송 주소 목록 조회 성공', type: [DeliveryAddress] })
     @ApiResponse({ status: 404, description: '사용자를 찾을 수 없습니다.' })
@@ -53,7 +57,7 @@ export class DeliveryAddressController {
     @ApiOperation({ summary: '배송 주소 삭제' })
     @ApiResponse({ status: 200, description: '배송 주소가 삭제되었습니다.' })
     @ApiResponse({ status: 404, description: '주소를 찾을 수 없습니다.' })
-    deleteAddress(@Param("id") id: string) {
+    deleteAddress(@Param("id") id: number) {
         return this.addressService.deleteAddress(id);
     }
 }
