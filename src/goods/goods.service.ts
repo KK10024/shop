@@ -58,10 +58,10 @@ export class GoodsService {
     
     await this.goodsRepository.delete(id);
   }
-  async createOrder(createGoodsOrderDto: CreateGoodsOrderDto) {
+  async createOrder(createGoodsOrderDto: CreateGoodsOrderDto, userId: string) {
     this.logger.log("상품 오더 생성 서비스 호출")
 
-    const user = await this.userRepository.findOne(createGoodsOrderDto.userId);
+    const user = await this.userRepository.findOne(userId);
     const address = await this.deliveryAddressRepository.findAddressById(createGoodsOrderDto.addressId);
   
     if (!user) {
@@ -84,18 +84,16 @@ export class GoodsService {
         goods,
         quantity: item.quantity,
         user,
-        address,
+        deliveryAddress: address,
         status: createGoodsOrderDto.status,
       };
   
       // 각 상품별 주문 데이터 생성
       const orderItem = await this.goodsOrderRepository.createOrder(orderItemData);
-      orderItems.push(orderItem);
     }
   
     return {
       message: '주문이 성공적으로 생성되었습니다.',
-      orderItems,
     };
   }
   async findAllOrders(userId: string){

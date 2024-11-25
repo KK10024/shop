@@ -5,14 +5,26 @@ import { GoodsSize } from 'src/common/enum/goods';
 export class CreateGoodDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    description: '상품 이름',
+    example: "테스트 상품",
+  })
   name: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    description: '상품 설명',
+    example: "테스트 상품입니다",
+  })
   content: string;
 
   @IsNumber()
   @IsNotEmpty()
+  @ApiProperty({
+    description: '상품가격',
+    example: 10000,
+  })
   price: number;
 
   @IsArray()
@@ -27,6 +39,10 @@ export class CreateGoodDto {
   files?: string[];
 
   @IsEnum(GoodsSize)
+  @ApiProperty({
+    description: '상품 이름',
+    example: GoodsSize.MEDIUM,
+  })
   @IsOptional()
   size?: GoodsSize; // 선택적으로 받을 수 있도록
 }

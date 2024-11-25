@@ -12,8 +12,8 @@ export class GoodsOrderRepository {
     this.repository = this.dataSource.getRepository(GoodsOrder);
   }
   async createOrder(orderData: CreateGoodsInterface) {
-    const order = this.repository.create(orderData);
-    return await this.repository.save(order);
+    const orders =  await this.repository.create(orderData);
+    return await this.repository.save(orders);
   }
   async createOrders(orderDataArray: CreateGoodsInterface[]) {
     const orders = this.repository.create(orderDataArray);

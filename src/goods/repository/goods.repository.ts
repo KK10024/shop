@@ -36,7 +36,19 @@ export class GoodsRepository {
 
   // 특정 상품 조회
   async findOne(id: number): Promise<Goods | null> {
-    return await this.repository.findOne({ where: { id } });
+    return await this.repository
+      .createQueryBuilder('goods')
+      .select([
+        'goods.id',
+        'goods.name', 
+        'goods.content', 
+        'goods.price', 
+        'goods.size',
+        'goods.views'
+      ])
+      .leftJoinAndSelect('goods.images', 'images')
+      .where('goods.id = :id', { id })
+      .getOne();  // 하나의 결과를 반환
   }
 
   // 상품 삭제

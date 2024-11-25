@@ -5,7 +5,7 @@ import { DeliveryAddress } from "src/delivery-address/entities/delivery-address.
 export interface CreateGoodsInterface {
     status: string;
     quantity: number;
-    address: DeliveryAddress;
+    deliveryAddress: DeliveryAddress;
     goods: Goods; 
     user: User;
   }
