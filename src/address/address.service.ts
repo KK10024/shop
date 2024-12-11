@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { DeliveryAddressRepository } from "./repository/delivery-address.repository";
+import { AddressRepository } from "./repository/address.repository";
 
 import { UserRepository } from "src/user/repository/user.repository";
 import { CreateDeliveryAddressDto } from "./dto/create-delivery-address";
@@ -7,9 +7,9 @@ import { UpdateDeliveryAddressDto } from "./dto/update-delivery-address.dto";
 import { CustomLoggerService } from "src/common/custom-logger/logger.service";
 
 @Injectable()
-export class DeliveryAddressService {
+export class AddressService {
     constructor(
-        private readonly addressRepository: DeliveryAddressRepository,
+        private readonly addressRepository: AddressRepository,
         private readonly userRepository: UserRepository,
         private readonly logger: CustomLoggerService,
     ) {}

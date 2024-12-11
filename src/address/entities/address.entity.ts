@@ -4,7 +4,7 @@ import { GoodsOrder } from "src/goods/entities/goods.order.entity";
 
 
 @Entity()
-export class DeliveryAddress {
+export class Address {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -23,6 +23,6 @@ export class DeliveryAddress {
     @ManyToOne(() => User, (user) => user.address, { onDelete: "CASCADE" })
     user: User;
 
-    @OneToMany(() => GoodsOrder, (orders) => orders.deliveryAddress)
+    @OneToMany(() => GoodsOrder, (orders) => orders.address)
     orders: GoodsOrder;
 }

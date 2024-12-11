@@ -51,7 +51,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // 새로운 세션 생성
     const session = await this.sessionService.createSession({
       userId,
-      adminId: 'admin-id-123', // 기본 어드민 지정
+      adminId: 'ab202f05-4f3e-4bd1-a7ac-1193d274c184',
       title,
     });
 
@@ -59,7 +59,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.emit(ChatEvents.SESSION_START, { sessionId: session.id });
   }
 
-  @UseGuards(JwtWsGuard)  // WebSocket 이벤트에 JWT 가드 적용
+  @UseGuards(JwtWsGuard)
   @SubscribeMessage(ChatEvents.SEND_MESSAGE)
   async handleSendMessage(
     @MessageBody() data: { sessionId: string; senderId: string; message: string },

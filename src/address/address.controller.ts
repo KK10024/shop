@@ -1,18 +1,18 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
-import { DeliveryAddressService } from "./delivery-address.service";
+import { AddressService } from "./address.service";
 import { CreateDeliveryAddressDto } from "./dto/create-delivery-address";
 import { UpdateDeliveryAddressDto } from "./dto/update-delivery-address.dto";
 import { AuthenticatedRequest, JwtAuthGuard } from "src/common/guard/jwt.auth.guard ";
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { DeliveryAddress } from './entities/delivery-address.entity';
 import { TransformInterceptor } from "src/common/intersepter/transformation.intersepter";
 import { CustomLoggerService } from "src/common/custom-logger/logger.service";
+import { Address } from "./entities/address.entity";
 
 @ApiTags('Delivery Address')  // 컨트롤러 태그
 @Controller("delivery-address")
 export class DeliveryAddressController {
     constructor(
-        private readonly addressService: DeliveryAddressService,
+        private readonly addressService: AddressService,
         private readonly logger: CustomLoggerService) {}
 
     @Post()
@@ -35,7 +35,7 @@ export class DeliveryAddressController {
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(TransformInterceptor)
     @ApiOperation({ summary: '사용자의 모든 배송 주소 조회' })
-    @ApiResponse({ status: 200, description: '사용자의 배송 주소 목록 조회 성공', type: [DeliveryAddress] })
+    @ApiResponse({ status: 200, description: '사용자의 배송 주소 목록 조회 성공', type: [Address] })
     @ApiResponse({ status: 404, description: '사용자를 찾을 수 없습니다.' })
     getAddresses(@Req() req: AuthenticatedRequest) {
         this.logger.log("모든 배송지 조회 컨트롤러 호출")

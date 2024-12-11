@@ -8,7 +8,7 @@ import AppDataSource from './config/data-source';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ImageModule } from './image/image.module';
-import { AddressModule } from './delivery-address/delivery-address.module';
+import { AddressModule } from './address/address.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './common/intersepter/logging.intersepter';
 import { LoggerMiddleware } from './middleware.ts/logging.middleware'; 

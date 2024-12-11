@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
-import { DeliveryAddress } from './entities/delivery-address.entity';
-import { DeliveryAddressController } from './delivery-address.controller';
-import { DeliveryAddressService } from './delivery-address.service';
-import { DeliveryAddressRepository } from './repository/delivery-address.repository';
+import { DeliveryAddressController } from './address.controller';
+import { AddressRepository } from './repository/address.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
+import { Address } from './entities/address.entity';
+import { AddressService } from './address.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DeliveryAddress]), 
+    TypeOrmModule.forFeature([Address]), 
     UserModule,
     CustomLoggerModule,
     JwtModule.register({
@@ -20,10 +20,10 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
   ],
   controllers: [DeliveryAddressController],
   providers: [
-    DeliveryAddressService,
-    DeliveryAddressRepository
+    AddressService,
+    AddressRepository
   ],
-  exports: [DeliveryAddressRepository],
+  exports: [AddressRepository],
 })
 
 export class AddressModule {}

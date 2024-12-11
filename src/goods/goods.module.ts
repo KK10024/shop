@@ -10,7 +10,7 @@ import { GoodsOrderRepository } from './repository/goods.order.repository';
 import { ImageModule } from 'src/image/image.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
-import { AddressModule } from 'src/delivery-address/delivery-address.module';
+import { AddressModule } from 'src/address/address.module';
 import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
 
 @Module({

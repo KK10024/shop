@@ -6,8 +6,8 @@ import { FindGoods } from './dto/find-good.dto';
 import { ImageService } from 'src/image/image.service';
 import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { UserRepository } from 'src/user/repository/user.repository';
-import { DeliveryAddressRepository } from 'src/delivery-address/repository/delivery-address.repository';
 import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
+import { AddressRepository } from 'src/address/repository/address.repository';
 
 @Injectable()
 export class GoodsService {
@@ -16,7 +16,7 @@ export class GoodsService {
     private goodsOrderRepository: GoodsOrderRepository,
     private userRepository: UserRepository,
     private imageService: ImageService,
-    private deliveryAddressRepository: DeliveryAddressRepository,
+    private addressRepository: AddressRepository,
     private logger: CustomLoggerService,
   ) {}
 
@@ -62,7 +62,7 @@ export class GoodsService {
     this.logger.log("상품 오더 생성 서비스 호출")
 
     const user = await this.userRepository.findOne(userId);
-    const address = await this.deliveryAddressRepository.findAddressById(createGoodsOrderDto.addressId);
+    const address = await this.addressRepository.findAddressById(createGoodsOrderDto.addressId);
   
     if (!user) {
       throw new NotFoundException('사용자가 존재하지 않습니다.');
@@ -83,7 +83,7 @@ export class GoodsService {
         goods,
         quantity: item.quantity,
         user,
-        deliveryAddress: address,
+        address: address,
         status: createGoodsOrderDto.status,
       };
   

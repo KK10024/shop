@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { GoodsOrder } from "src/goods/entities/goods.order.entity";
-import { DeliveryAddress } from "src/delivery-address/entities/delivery-address.entity";
 import { UserGender, UserRole } from "src/common/enum/user";
+import { Address } from "src/address/entities/address.entity";
 
 @Entity()
 export class User {
@@ -40,8 +40,8 @@ export class User {
     @DeleteDateColumn({ nullable: true })
     deletedAt: Date | null; 
 
-    @OneToMany(() => DeliveryAddress, (address) => address.user, { cascade: true })
-    address: DeliveryAddress[];
+    @OneToMany(() => Address, (address) => address.user, { cascade: true })
+    address: Address[];
 
     @OneToMany(() => GoodsOrder, (order)=> order.user)
     order: GoodsOrder[];
