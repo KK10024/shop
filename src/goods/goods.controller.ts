@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, UploadedFiles, UseGuards, Req, UseInterceptors } from '@nestjs/common';
-import { GoodsService } from './goods.service';
+import { Controller, Get, Post, Body, Param, Delete, Query, UploadedFiles, UseGuards, Req, UseInterceptors, Inject } from '@nestjs/common';
 import { CreateGoodDto } from './dto/create-good.dto';
 import { FindGoods } from './dto/find-good.dto';
 import { ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody, ApiTags } from '@nestjs/swagger';
@@ -7,12 +6,14 @@ import { CreateGoodsOrderDto } from './dto/create-order.dto';
 import { AuthenticatedRequest, JwtAuthGuard } from 'src/common/guard/jwt.auth.guard ';
 import { TransformInterceptor } from 'src/common/intersepter/transformation.intersepter';
 import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
+import { IGoodsService } from './interface/goods.service.interface';
 
 @ApiTags('Goods') 
 @Controller('goods')
 export class GoodsController {
   constructor(
-    private readonly goodsService: GoodsService,    
+    @Inject('IGoodsService')
+    private readonly goodsService: IGoodsService,    
     private readonly logger: CustomLoggerService,
   ) {}
 
@@ -27,8 +28,8 @@ export class GoodsController {
     @Body() createGoodDto: CreateGoodDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
+    console.log(files, "컨트롤러");
     this.logger.log("상품 생성 컨트롤러 호출")
-    console.log(createGoodDto, "12415")
     return await this.goodsService.create(createGoodDto, files);
   }
 

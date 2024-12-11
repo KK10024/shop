@@ -8,7 +8,7 @@ import { Injectable } from "@nestjs/common";
 
 
 @Injectable()
-export class AdminService {
+export class AdminService{
     constructor(
         private adminRepository: AdminRepository,
         private userRepository: UserRepository,

@@ -6,14 +6,14 @@ import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CustomLoggerService } from './common/custom-logger/logger.service';
 import { LoggingInterceptor } from './common/intersepter/logging.intersepter';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  //모든 요청 자동 유효성 검사
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
   .setTitle('Shop API')  // API 제목 설정
@@ -23,13 +23,15 @@ async function bootstrap() {
   .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);  // '/api' 경로에서 Swagger UI를 볼 수 있도록 설정
+  SwaggerModule.setup('api', app, document); 
 
   app.useLogger(app.get(CustomLoggerService));
 
-  // 전역 인터셉터 등록
-  // app.useGlobalInterceptors(new LoggingInterceptor(app.get(CustomLoggerService)));
-
+  
+  app.useGlobalInterceptors(new LoggingInterceptor(app.get(CustomLoggerService)));
+  
+  app.useWebSocketAdapter(new IoAdapter(app));
+  
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

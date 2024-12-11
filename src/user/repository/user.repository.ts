@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
-import { CreateUser } from '../interface/create-Interface';
 import dayjs from 'dayjs';
+import { CreateUser } from '../type/create-user.type';
 
 @Injectable()
 export class UserRepository {

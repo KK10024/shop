@@ -27,6 +27,7 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const user = this.jwtService.verify(token);  // 토큰 검증
       request.user = user;  // 인증된 사용자 정보 설정
+      console.log(user, "user");
       return true;
     } catch (error) {
       this.logger.log(error)

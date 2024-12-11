@@ -1,17 +1,18 @@
-import { Controller, Post, Body, Res, UseInterceptors } from '@nestjs/common';
-import { UserService } from './user.service';
+import { Controller, Post, Body, Res, UseInterceptors, Inject } from '@nestjs/common';
 import { CreateUserDto, VerifyemailDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { Response as ExpressResponse } from 'express';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { CustomLoggerService } from 'src/common/custom-logger/logger.service';
 import { TransformInterceptor } from 'src/common/intersepter/transformation.intersepter';
+import { IUserService } from './interface/user.service.interface';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly userService: UserService,
+    @Inject('IUserService')
+    private readonly userService: IUserService,
     private readonly logger: CustomLoggerService
   ) {}
 

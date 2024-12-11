@@ -16,17 +16,18 @@ import { RolesGuard } from './common/guard/roles.guard';
 import { AdminModule } from './admin/admin.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomLoggerModule } from './common/custom-logger/logger.Module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(AppDataSource.options),
     UserModule,
     GoodsModule,
-    ImageModule,
     AddressModule,
     ImageModule,
     AdminModule,
     CustomLoggerModule,
+    EventsModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),     
       serveRoot: '/uploads', //정적파일 경로

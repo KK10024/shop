@@ -15,7 +15,6 @@ export class ImageService {
     id: number
   ) {
     this.logger.log("이미지 생성 서비스 호출")
-
     if (!files || files.length === 0) {
       console.log('No files to save');
       return;
@@ -27,6 +26,7 @@ export class ImageService {
       entityId: id,
       type: type,
     }));
+
     return await this.imageRepository.createAndSaveImages(fileData);
   }
 

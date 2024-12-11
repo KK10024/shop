@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { Menu } from './entities/menu.entity';
 import { AdminService } from './admin.service';
@@ -23,9 +22,13 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
   ],
   controllers: [AdminController],
   providers: [
-    AdminService,
+    {
+      provide: 'IAdminService',
+      useClass: AdminService,
+    },
     AdminRepository
   ],
   exports: [AdminRepository], 
 })
+
 export class AdminModule {}

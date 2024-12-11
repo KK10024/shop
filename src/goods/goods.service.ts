@@ -72,7 +72,6 @@ export class GoodsService {
     }
   
     // 모든 상품 검증 및 주문 생성
-    const orderItems = [];
     for (const item of createGoodsOrderDto.items) {
       const goods = await this.goodsRepository.findOne(item.goodsId);
   

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { GoodsOrder } from '../entities/goods.order.entity'; // GoodsOrder 엔티티 경로 수정 필요
-import { CreateGoodsInterface } from '../interface/create-order.interface';
+import { GoodsOrder } from '../entities/goods.order.entity';
 import dayjs from 'dayjs';
+import { CreateOrder } from '../type/create-order.type';
 
 @Injectable()
 export class GoodsOrderRepository {
@@ -11,11 +11,11 @@ export class GoodsOrderRepository {
   constructor(private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(GoodsOrder);
   }
-  async createOrder(orderData: CreateGoodsInterface) {
+  async createOrder(orderData: CreateOrder) {
     const orders =  await this.repository.create(orderData);
     return await this.repository.save(orders);
   }
-  async createOrders(orderDataArray: CreateGoodsInterface[]) {
+  async createOrders(orderDataArray: CreateOrder[]) {
     const orders = this.repository.create(orderDataArray);
     return await this.repository.save(orders);
   }

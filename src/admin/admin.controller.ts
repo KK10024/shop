@@ -1,20 +1,19 @@
-import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, Query, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBody } from "@nestjs/swagger";
 import { CreateMenuDto } from "./dto/create-menu.dto";
-import { AdminService } from "./admin.service";
-import { Roles } from "src/decorator/custom-roles";
 import { CustomLoggerService } from "src/common/custom-logger/logger.service";
 import { RolesGuard } from "src/common/guard/roles.guard";
 import { JwtAuthGuard } from "src/common/guard/jwt.auth.guard ";
 import { TransformInterceptor } from "src/common/intersepter/transformation.intersepter";
+import { Roles } from "src/decorator/custom-roles";
+import { IAdminService } from "./interface/admin.service.interface";
 
 @ApiTags('Admin') 
 @Controller('admin')
-@Roles('ADMIN')
-@UseGuards(RolesGuard, JwtAuthGuard)
 export class AdminController {
     constructor(
-        private adminService: AdminService,
+        @Inject('IAdminService') 
+        private readonly adminService: IAdminService,
         private logger: CustomLoggerService,
     ) {}
 
@@ -28,7 +27,8 @@ export class AdminController {
         this.logger.log("관리자 메뉴 생성 컨트롤러 호출")
         return await this.adminService.createMenu(createMenuDto);
     }
-
+    @Roles('ADMIN')
+    @UseGuards(RolesGuard, JwtAuthGuard)
     @Get('menu')
     @UseInterceptors(TransformInterceptor)
     @ApiOperation({ summary: '전체 메뉴 조회', description: '데이터베이스에서 모든 메뉴 항목을 가져옵니다.' })

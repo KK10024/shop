@@ -24,9 +24,15 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
   ],
   controllers: [UserController],
   providers: [
-    UserService,
-    UserRepository
+    {
+      provide: 'IUserService',
+      useClass: UserService,
+    },
+    UserRepository,
   ],
-  exports: [UserRepository], 
+  exports: [
+    'IUserService',
+    UserRepository
+  ], 
 })
 export class UserModule {}

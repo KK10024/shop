@@ -27,7 +27,10 @@ import { CustomLoggerModule } from 'src/common/custom-logger/logger.Module';
   ],
   controllers: [GoodsController],
   providers: [
-    GoodsService, 
+    {
+      provide: 'IGoodsService',
+      useClass: GoodsService,
+    },
     GoodsRepository, 
     GoodsOrderRepository
   ],
